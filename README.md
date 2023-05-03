@@ -26,3 +26,9 @@ We will be looking in the direction of Azure to find services that can help us a
 
 ## Use cases
 In what way can PoC v1 provide real value to people?
+
+
+
+# Considerations
+Because the Azure OpenAI service only accepts English, we will be limited to only use English.
+
