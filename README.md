@@ -39,4 +39,5 @@ In what way can PoC v1 provide real value to people?
 
 # Considerations
 Because the Azure OpenAI service only accepts English, we will be limited to only use English.
+Maximum amount of 2048 tokens are accepted by the OpenAI embeddings API.
 
