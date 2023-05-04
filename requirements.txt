@@ -7,3 +7,4 @@ scikit-learn==1.2.2
 pandas==2.0.1
 tiktoken==0.3.3
 pypdf==3.8.1
+farm-haystack==1.16.1
