@@ -1,0 +1,15 @@
+version: '3.9'
+
+services:
+    python:
+        build:
+            context: ./
+            dockerfile: Dockerfile
+    jupyter:
+        image: jupyter/pyspark-notebook
+        volumes:
+            - ./work/:/home/jovyan/work
+        ports:
+            - 8888:8888
+        depends_on:
+            - python

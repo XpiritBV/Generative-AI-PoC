@@ -6,9 +6,12 @@
 	// "build": {
     //     // Path is relataive to the devcontainer.json file.
     //     "dockerfile": "Dockerfile"
-    // }
-	"image": "mcr.microsoft.com/devcontainers/python:0-3.11",
-    "runArgs": ["--env-file",".devcontainer/devcontainer.env"],
+    // },
+    "dockerComposeFile": "docker-compose.yml",
+    "service": "python",
+    "workspaceFolder": "../work",
+    // "workspaceFolder": "../work",
+	//"image": "mcr.microsoft.com/devcontainers/python:0-3.11",
 
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	// "features": {},
@@ -17,7 +20,7 @@
 	// "forwardPorts": [],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	"postCreateCommand": "pip install --upgrade pip && pip3 install --user -r requirements.txt",
+	//"postCreateCommand": "pip install --upgrade pip && pip3 install --user -r requirements.txt",
 
     "containerEnv": {
         "ENDPOINT": "https://rg-openai-sandbox.openai.azure.com/"
