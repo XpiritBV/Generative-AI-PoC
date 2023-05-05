@@ -17,7 +17,7 @@
 	// "forwardPorts": [],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	"postCreateCommand": "pip install --upgrade pip && pip3 install --user -r requirements.txt",
+	"postCreateCommand": "pip install --user -r requirements.txt",
 
     "containerEnv": {
         "ENDPOINT": "https://rg-openai-sandbox.openai.azure.com/"
@@ -28,7 +28,8 @@
         "vscode": {
             "extensions": [
                 "ms-python.python",
-                "GitHub.copilot"
+                "GitHub.copilot",
+                "ms-toolsai.jupyter"
             ],
             "settings": {
                 "python.testing.pytestArgs": [
