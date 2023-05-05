@@ -8,7 +8,7 @@
     //     "dockerfile": "Dockerfile"
     // }
 	"image": "mcr.microsoft.com/devcontainers/python:0-3.11",
-    "runArgs": ["--env-file",".devcontainer/devcontainer.env", "--gpus", "all"],
+    "runArgs": ["--gpus", "all"],
 
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	// "features": {},
@@ -18,10 +18,6 @@
 
 	// Use 'postCreateCommand' to run commands after the container is created.
 	"postCreateCommand": "pip install --user -r requirements.txt",
-
-    "containerEnv": {
-        "ENDPOINT": "https://rg-openai-sandbox.openai.azure.com/"
-    },
     
 	// Configure tool-specific properties.
 	"customizations": {
