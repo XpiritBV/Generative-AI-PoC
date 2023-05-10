@@ -27,7 +27,9 @@
                 "ms-python.python",
                 "GitHub.copilot",
                 "ms-toolsai.jupyter",
-                "ms-azuretools.vscode-azurefunctions"
+                "ms-azuretools.vscode-azurefunctions",
+                "hashicorp.terraform",
+                "github.vscode-github-actions"
             ],
             "settings": {
                 "python.testing.pytestArgs": [
