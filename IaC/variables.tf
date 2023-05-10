@@ -1,13 +1,8 @@
-variable "resource_group_location" {
+variable "location" {
   default     = "westeurope"
-  description = "Location of the resource group."
+  description = "Location of all the resources."
 }
 
-variable "resource_group_name_prefix" {
-  default     = "rg"
-  description = "Prefix of the resource group name that's combined with a random ID so name is unique in your Azure subscription."
-}
-
-variable "resource_group_name"{
-    default = ""
+variable "resource_group_name" {
+    default = "rg-generative-ai-poc"
 }
