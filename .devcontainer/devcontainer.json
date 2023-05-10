@@ -7,6 +7,7 @@
     //     // Path is relataive to the devcontainer.json file.
     //     "dockerfile": "Dockerfile"
     // }
+    // Debian Image
 	"image": "mcr.microsoft.com/devcontainers/python:0-3.11",
     "runArgs": ["--gpus", "all"],
 
@@ -17,7 +18,7 @@
 	// "forwardPorts": [],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	"postCreateCommand": "pip install --user -r requirements.txt",
+	"postCreateCommand": "bash ./.devcontainer/postCreateCommand.sh",
     
 	// Configure tool-specific properties.
 	"customizations": {
@@ -25,7 +26,8 @@
             "extensions": [
                 "ms-python.python",
                 "GitHub.copilot",
-                "ms-toolsai.jupyter"
+                "ms-toolsai.jupyter",
+                "ms-azuretools.vscode-azurefunctions"
             ],
             "settings": {
                 "python.testing.pytestArgs": [
