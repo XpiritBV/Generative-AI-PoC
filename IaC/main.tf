@@ -4,7 +4,7 @@ resource "generative-ai-poc-azurerm_resource_group" "rg" {
 }
 
 resource "azurerm_storage_account" "terraform" {
-  name                     = "terraformstorage"
+  name                     = "terraformpersistance"
   resource_group_name      = generative-ai-poc-azurerm_resource_group.terraform.name
   location                 = generative-ai-poc-azurerm_resource_group.terraform.location
   account_tier             = "Standard"
@@ -17,7 +17,7 @@ resource "azurerm_storage_account" "terraform" {
 
 terraform {
   backend "azurerm" {
-    storage_account_name = azurerm_storage_account.terraform.name
+    storage_account_name = "terraformpersistance"
     container_name       = "terraform-state"
     key                  = "terraform.tfstate"
   }
