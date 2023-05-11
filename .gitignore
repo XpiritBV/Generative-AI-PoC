@@ -2,3 +2,4 @@
 .mypy_cache/
 .terraform
 terraform.state
+.terraform.lock.hcl
