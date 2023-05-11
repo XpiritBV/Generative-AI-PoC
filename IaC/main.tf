@@ -1,24 +1,24 @@
-resource "generative-ai-poc-azurerm_resource_group" "rg" {
-  location = var.location
-  name     = var.resource_group_name
-}
-
-resource "azurerm_storage_account" "terraform" {
-  name                     = "terraformpersistance"
-  resource_group_name      = var.resource_group_name
-  location                 = var.location
-  account_tier             = "Standard"
-  account_replication_type = "LRS"
-
-  tags = {
-    environment = "terraform"
-  }
-}
-
 terraform {
-  backend "azurerm" {
-    storage_account_name = "terraformpersistance"
-    container_name       = "terraform-state"
-    key                  = "terraform.tfstate"
+  required_providers {
+    azurerm = {
+      source = "hashicorp/azurerm"
+      version = "3.55.0"
+    }
   }
+}
+
+provider "azurerm" {
+  features {}
+}
+
+locals {
+  tags = {
+    owner = "Jeroen van de Kraats"
+  }
+}
+
+resource "azurerm_resource_group" "resourcegroup" {
+  name     = var.resource_group_name
+  location = var.location
+  tags = local.tags
 }
