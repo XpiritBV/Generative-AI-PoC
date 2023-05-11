@@ -10,6 +10,7 @@ env:
   ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
   ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
   ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+  ARM_SP_PASSWORD: ${{ secrets.ARM_SP_PASSWORD }}
 
 jobs:
   terraform:
@@ -18,6 +19,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      - name: az cli login
+        uses: Azure/cli@v1.0.7
+        with:
+          inlineScript:
+            az login --service-principal --username ${{ secrets.ARM_CLIENT_ID }} --password ${{ secrets.ARM_SP_PASSWORD }} --tenant ${{ secrets.ARM_TENANT_ID }}
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
         with:
@@ -29,17 +35,7 @@ jobs:
         id: plan
         run: terraform plan -out=tfplan
         working-directory: IaC
-        env:
-          ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
-          ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
-          ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
-          ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: terraform apply -auto-approve tfplan
         working-directory: IaC
-        env:
-          ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
-          ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
-          ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
-          ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
