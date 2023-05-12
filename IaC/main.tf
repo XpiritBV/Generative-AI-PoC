@@ -67,7 +67,24 @@ resource "azurerm_cognitive_deployment" "res-4" {
     azurerm_cognitive_account.res-1,
   ]
 }
-resource "azurerm_storage_account" "res-5" {
+resource "azurerm_cognitive_account" "res-5" {
+  custom_subdomain_name = "generative-ai-poc"
+  kind                  = "CognitiveServices"
+  location              = "westeurope"
+  name                  = "generative-ai-poc"
+  resource_group_name   = "generative-ai-poc"
+  sku_name              = "S0"
+  tags = {
+    Owner = "Duncan Roosma"
+  }
+  network_acls {
+    default_action = "Allow"
+  }
+  depends_on = [
+    azurerm_resource_group.res-0,
+  ]
+}
+resource "azurerm_storage_account" "res-6" {
   account_replication_type = "LRS"
   account_tier             = "Standard"
   location                 = "westeurope"
@@ -80,24 +97,23 @@ resource "azurerm_storage_account" "res-5" {
     azurerm_resource_group.res-0,
   ]
 }
-resource "azurerm_storage_container" "res-7" {
+resource "azurerm_storage_container" "res-8" {
   name                 = "ingestion-documents"
   storage_account_name = "generativeaipersistance"
 }
-resource "azurerm_storage_container" "res-8" {
+resource "azurerm_storage_container" "res-9" {
   name                 = "json-documents"
   storage_account_name = "generativeaipersistance"
 }
-resource "azurerm_storage_container" "res-9" {
+resource "azurerm_storage_container" "res-10" {
   name                 = "vector-documents"
   storage_account_name = "generativeaipersistance"
 }
-resource "azurerm_storage_account" "res-13" {
+resource "azurerm_storage_account" "res-14" {
   account_kind                    = "Storage"
   account_replication_type        = "LRS"
   account_tier                    = "Standard"
   default_to_oauth_authentication = true
-  cross_tenant_replication_enabled = false
   location                        = "westeurope"
   name                            = "generativeaipocacd8"
   resource_group_name             = "generative-ai-poc"
@@ -108,24 +124,24 @@ resource "azurerm_storage_account" "res-13" {
     azurerm_resource_group.res-0,
   ]
 }
-resource "azurerm_storage_container" "res-15" {
+resource "azurerm_storage_container" "res-16" {
   name                 = "azure-webjobs-hosts"
   storage_account_name = "generativeaipocacd8"
 }
-resource "azurerm_storage_container" "res-16" {
+resource "azurerm_storage_container" "res-17" {
   name                 = "azure-webjobs-secrets"
   storage_account_name = "generativeaipocacd8"
 }
-resource "azurerm_storage_container" "res-17" {
+resource "azurerm_storage_container" "res-18" {
   name                 = "scm-releases"
   storage_account_name = "generativeaipocacd8"
 }
-resource "azurerm_storage_share" "res-19" {
+resource "azurerm_storage_share" "res-20" {
   name                 = "generative-ai-poc-python9244"
   quota                = 5120
   storage_account_name = "generativeaipocacd8"
 }
-resource "azurerm_service_plan" "res-22" {
+resource "azurerm_service_plan" "res-23" {
   location            = "westeurope"
   name                = "ASP-generativeaipoc-a6aa"
   os_type             = "Linux"
@@ -138,7 +154,7 @@ resource "azurerm_service_plan" "res-22" {
     azurerm_resource_group.res-0,
   ]
 }
-resource "azurerm_linux_function_app" "res-23" {
+resource "azurerm_linux_function_app" "res-24" {
   builtin_logging_enabled    = false
   client_certificate_mode    = "Required"
   https_only                 = true
@@ -166,23 +182,23 @@ resource "azurerm_linux_function_app" "res-23" {
     }
   }
   depends_on = [
-    azurerm_service_plan.res-22,
+    azurerm_service_plan.res-23,
   ]
 }
-resource "azurerm_function_app_function" "res-27" {
+resource "azurerm_function_app_function" "res-28" {
   config_json     = "{\"bindings\":[{\"connection\":\"AzureWebJobsStorage\",\"direction\":\"in\",\"name\":\"document\",\"path\":\"ingestion-documents/{name}\",\"type\":\"blobTrigger\"}]}"
   function_app_id = "/subscriptions/f317d45c-55f5-4341-8d49-990b06d1c9a5/resourceGroups/generative-ai-poc/providers/Microsoft.Web/sites/generative-ai-poc-python"
   name            = "convert-to-markdown"
   depends_on = [
-    azurerm_linux_function_app.res-23,
+    azurerm_linux_function_app.res-24,
   ]
 }
-resource "azurerm_app_service_custom_hostname_binding" "res-28" {
+resource "azurerm_app_service_custom_hostname_binding" "res-29" {
   app_service_name    = "generative-ai-poc-python"
   hostname            = "generative-ai-poc-python.azurewebsites.net"
   resource_group_name = "generative-ai-poc"
   depends_on = [
-    azurerm_linux_function_app.res-23,
+    azurerm_linux_function_app.res-24,
   ]
 }
 resource "azurerm_application_insights" "res-30" {
