@@ -3,11 +3,10 @@
 	"image": "mcr.microsoft.com/devcontainers/python:0-3.11",
     
 	"features": {
-        "azure-cli": "latest"
+        "azure-cli": "latest",
+        "ghcr.io/jlaundry/devcontainer-features/azure-functions-core-tools:1": {},
+        "ghcr.io/devcontainers/features/terraform:1": {}
     },
-
-    "postCreateCommand": "bash ./.devcontainer/postCreateCommand.sh",
-    
 	"customizations": {
         "vscode": {
             "extensions": [
@@ -16,7 +15,8 @@
                 "ms-toolsai.jupyter",
                 "ms-azuretools.vscode-azurefunctions",
                 "hashicorp.terraform",
-                "github.vscode-github-actions"
+                "github.vscode-github-actions",
+                "azurite.azurite"
             ],
             "settings": {
                 "python.testing.pytestArgs": [
