@@ -1,56 +1,26 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-
-using Azure;
-using Azure.AI.OpenAI;
+﻿using System.Threading.Tasks;
 
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.DurableTask;
-
-using StackExchange.Redis;
 
 namespace GenerativeAi.Functions.ingestion;
 
 public class ProcessFunction
 {
-    private const string IndexPrefix = "file";
-    private readonly IDatabase _database;
-    private readonly OpenAIClient _openAiClient;
+    private readonly Documents _documents;
+    private readonly Embed _embed;
 
-    public ProcessFunction(OpenAIClient openAiClient,
-                           IDatabase database)
+    public ProcessFunction(Embed embed,
+                           Documents documents)
     {
-        _openAiClient = openAiClient;
-        _database = database;
+        _embed = embed;
+        _documents = documents;
     }
 
     [FunctionName(nameof(ProcessChunk))]
-    public async Task ProcessChunk([ActivityTrigger] ProcessChunkRequest request)
+    public async Task ProcessChunk([ActivityTrigger] Chunk chunk)
     {
-        var result = await _openAiClient.GetEmbeddingsAsync(request.ModelId, new EmbeddingsOptions(request.Chunk.Content));
-        await Store(request.Chunk, result);
+        var embeddings = await _embed.Embedding(chunk.Content);
+        await _documents.Save(chunk, embeddings);
     }
-
-    private Task Store(Chunk chunk, NullableResponse<Embeddings> result)
-    {
-        var embeddings = result.Value.Data[0].Embedding;
-        var vectorBytes = new byte[embeddings.Count * sizeof(float)];
-        Buffer.BlockCopy(embeddings.ToArray(), 0, vectorBytes, 0, vectorBytes.Length);
-
-        return _database.HashSetAsync(GenerateKey(chunk),
-                                      new HashEntry[]
-                                      {
-                                          new("name", chunk.Document.Name.ToString()),
-                                          new("version", chunk.Document.Version.ToString()),
-                                          new("chunkId", chunk.Id.ToString()),
-                                          new("content", chunk.Content),
-                                          new("vectors", vectorBytes)
-                                      });
-
-        static string GenerateKey(Chunk chunk)
-            => $"{IndexPrefix}:{chunk.Document.Name}_{chunk.Document.Version}_{chunk.Id}";
-    }
-
-    public record ProcessChunkRequest(Chunk Chunk, string ModelId = "text-embedding-ada-002");
 }

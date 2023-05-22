@@ -1,7 +1,6 @@
 ﻿using Azure;
 using Azure.AI.FormRecognizer.DocumentAnalysis;
 using Azure.AI.OpenAI;
-using Azure.Identity;
 using Azure.Storage.Blobs;
 
 using GenerativeAi.Functions.ingestion;
@@ -51,23 +50,14 @@ public class Startup : FunctionsStartup
                                       });
         builder.Services.AddSingleton(provider =>
                                       {
-                                          if(builder.GetContext().EnvironmentName == "Development")
-                                              return new BlobServiceClient("UseDevelopmentStorage=true");
-
                                           var settings = provider.GetService<IConfiguration>()
                                                                  .GetSection("azure_storage")
                                                                  .Get<AzureStorageSettings>();
-                                          return new BlobServiceClient(settings.EndPoint, new DefaultAzureCredential());
-                                          //new StorageSharedKeyCredential(settings.Name, settings.Key),
-                                          //new BlobClientOptions
-                                          //{
-                                          //    Retry =
-                                          //    {
-                                          //        Mode = RetryMode.Exponential,
-                                          //        MaxRetries = 10,
-                                          //        Delay = TimeSpan.FromSeconds(5)
-                                          //    }
-                                          //});
+                                          return new BlobServiceClient(settings.ConnectionString);
                                       });
+
+        builder.Services.AddSingleton<Documents>();
+        builder.Services.AddSingleton<Embed, TextAda002Embedding>();
+        builder.Services.AddSingleton(_ => new ModelSelector("prebuilt-document"));
     }
 }

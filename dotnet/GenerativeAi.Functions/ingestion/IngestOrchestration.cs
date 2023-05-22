@@ -9,8 +9,6 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 
 namespace GenerativeAi.Functions.ingestion;
 
-public record DocumentRequest(FileName Name, string Type);
-
 public class IngestOrchestration
 {
     [FunctionName(nameof(Document))]
@@ -30,8 +28,7 @@ public class IngestOrchestration
         var request = context.GetInput<DocumentRequest>();
 
         var chunks = await context.CallActivityAsync<IEnumerable<Chunk>>(nameof(AnalyzeFunction.AnalyzeDocument), new AnalyzeFunction.AnalyzeDocumentRequest(request.Name, request.Type));
-        var tasks = chunks.Select(chunk => context.CallActivityAsync(nameof(ProcessFunction.ProcessChunk),
-                                                                     new ProcessFunction.ProcessChunkRequest(chunk)));
+        var tasks = chunks.Select(chunk => context.CallActivityAsync(nameof(ProcessFunction.ProcessChunk), chunk));
         await Task.WhenAll(tasks);
     }
 }
