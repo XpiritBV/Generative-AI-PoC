@@ -1,0 +1,8 @@
+@hostname=localhost
+@port=7073
+POST http://{{hostname}}:{{port}}/api/Document
+Content-Type: application/json
+
+{
+     "Name": "apexxnar-epar-product-information_nl.pdf"
+}

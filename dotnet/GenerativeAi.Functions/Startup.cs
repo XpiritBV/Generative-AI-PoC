@@ -9,7 +9,7 @@ using Azure.Storage;
 using Azure.Storage.Blobs;
 
 using GenerativeAi.Functions;
-
+using GenerativeAi.Functions.settings;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.Azure;
 using Microsoft.Extensions.Configuration;
@@ -17,7 +17,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 using StackExchange.Redis;
 
-[assembly:FunctionsStartup(typeof(Startup))]
+[assembly: FunctionsStartup(typeof(Startup))]
 
 namespace GenerativeAi.Functions;
 

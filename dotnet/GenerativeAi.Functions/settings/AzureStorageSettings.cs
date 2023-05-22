@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace GenerativeAi.Functions;
+namespace GenerativeAi.Functions.settings;
 
 public class AzureStorageSettings
 {

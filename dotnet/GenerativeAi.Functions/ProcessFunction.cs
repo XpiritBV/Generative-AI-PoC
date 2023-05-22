@@ -26,7 +26,7 @@ public class ProcessFunction
     }
 
     [FunctionName(nameof(ProcessChunk))]
-    public async Task ProcessChunk([ActivityTrigger] ProcessChunkRequest request, ExecutionContext context)
+    public async Task ProcessChunk([ActivityTrigger] ProcessChunkRequest request)
     {
         var result = await _openAiClient.GetEmbeddingsAsync(request.ModelId, new EmbeddingsOptions(request.Chunk.Content));
         await Store(request.Chunk, result);

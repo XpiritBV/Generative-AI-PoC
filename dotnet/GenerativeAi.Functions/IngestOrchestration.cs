@@ -1,31 +1,35 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.DurableTask;
-using Microsoft.Extensions.Logging;
+using Microsoft.Azure.WebJobs.Extensions.Http;
 
 namespace GenerativeAi.Functions;
 
+public record DocumentRequest(FileName Name, string Type);
+
 public class IngestOrchestration
 {
-    [FunctionName("BlobTrigger")]
-    public static async Task Run([BlobTrigger("ingestion-documents/{name}")] Stream document,
-                                 string name,
-                                 [DurableClient] IDurableOrchestrationClient starter,
-                                 ILogger log)
+    [FunctionName(nameof(Document))]
+    public static async Task<HttpResponseMessage> Document([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)] HttpRequestMessage request,
+                                                           [DurableClient] IDurableOrchestrationClient orchestrationClient)
     {
-        await starter.StartNewAsync(nameof(AnalyzeDocumentOrchestrator), input:name);
+        var data = await request.Content.ReadAsAsync<DocumentRequest>();
+
+        var instanceId = await orchestrationClient.StartNewAsync(nameof(AnalyzeDocumentOrchestrator), data);
+
+        return orchestrationClient.CreateCheckStatusResponse(request, instanceId);
     }
 
     [FunctionName(nameof(AnalyzeDocumentOrchestrator))]
     public static async Task AnalyzeDocumentOrchestrator([OrchestrationTrigger] IDurableOrchestrationContext context)
     {
-        var fileName = context.GetInput<string>();
+        var request = context.GetInput<DocumentRequest>();
 
-        var chunks = await context.CallActivityAsync<IEnumerable<Chunk>>(nameof(AnalyzeFunction.AnalyzeDocument), new AnalyzeFunction.AnalyzeDocumentRequest(new FileName(fileName)));
+        var chunks = await context.CallActivityAsync<IEnumerable<Chunk>>(nameof(AnalyzeFunction.AnalyzeDocument), new AnalyzeFunction.AnalyzeDocumentRequest(request.Name, request.Type));
         var tasks = chunks.Select(chunk => context.CallActivityAsync(nameof(ProcessFunction.ProcessChunk),
                                                                      new ProcessFunction.ProcessChunkRequest(chunk)));
         await Task.WhenAll(tasks);

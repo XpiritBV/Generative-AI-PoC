@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
@@ -17,13 +18,16 @@ public class AnalyzeFunction
 {
     private const string ContainerName = "ingestion-documents";
     private readonly BlobServiceClient _blobServiceClient;
+    private readonly ModelSelector _modelSelector;
     private readonly DocumentAnalysisClient _documentAnalysisClient;
 
     public AnalyzeFunction(DocumentAnalysisClient documentAnalysisClient,
-                           BlobServiceClient blobServiceClient)
+                           BlobServiceClient blobServiceClient,
+                           ModelSelector modelSelector)
     {
         _documentAnalysisClient = documentAnalysisClient;
         _blobServiceClient = blobServiceClient;
+        _modelSelector = modelSelector;
     }
 
     [FunctionName(nameof(AnalyzeDocument))]
@@ -32,8 +36,9 @@ public class AnalyzeFunction
         var stream = await RetrieveBlob(request.FileName);
         var version = await GetFileVersion(stream);
         var document = new Document(request.FileName, version);
-        var result = await _documentAnalysisClient.AnalyzeDocumentAsync(WaitUntil.Completed, request.ModelId, stream);
-
+        var result = await _documentAnalysisClient.AnalyzeDocumentAsync(WaitUntil.Completed,
+                                                                        _modelSelector.ModelFrom(request.Type),
+                                                                        stream);
         await stream.DisposeAsync();
 
         //a clean way to change chunk strategy is needed
@@ -59,6 +64,5 @@ public class AnalyzeFunction
         return stream;
     }
 
-    public record AnalyzeDocumentRequest(FileName FileName,
-                                         string ModelId = "prebuilt-document");
+    public record AnalyzeDocumentRequest(FileName FileName, string Type);
 }

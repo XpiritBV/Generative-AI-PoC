@@ -8,3 +8,5 @@ terraform.tfstate.backup
 __blobstorage__/
 __queuestorage__/
 __azurite_*.json
+/LangChain/.chroma/index
+/.idea/**
