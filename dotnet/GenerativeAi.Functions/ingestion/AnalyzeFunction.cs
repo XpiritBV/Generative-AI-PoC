@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
@@ -12,14 +11,14 @@ using Azure.Storage.Blobs;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.DurableTask;
 
-namespace GenerativeAi.Functions;
+namespace GenerativeAi.Functions.ingestion;
 
 public class AnalyzeFunction
 {
     private const string ContainerName = "ingestion-documents";
     private readonly BlobServiceClient _blobServiceClient;
-    private readonly ModelSelector _modelSelector;
     private readonly DocumentAnalysisClient _documentAnalysisClient;
+    private readonly ModelSelector _modelSelector;
 
     public AnalyzeFunction(DocumentAnalysisClient documentAnalysisClient,
                            BlobServiceClient blobServiceClient,

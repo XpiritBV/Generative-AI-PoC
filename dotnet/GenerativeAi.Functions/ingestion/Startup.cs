@@ -1,25 +1,21 @@
-﻿using System;
-
-using Azure;
+﻿using Azure;
 using Azure.AI.FormRecognizer.DocumentAnalysis;
 using Azure.AI.OpenAI;
-using Azure.Core;
 using Azure.Identity;
-using Azure.Storage;
 using Azure.Storage.Blobs;
 
-using GenerativeAi.Functions;
+using GenerativeAi.Functions.ingestion;
 using GenerativeAi.Functions.settings;
+
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
-using Microsoft.Extensions.Azure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 using StackExchange.Redis;
 
-[assembly: FunctionsStartup(typeof(Startup))]
+[assembly:FunctionsStartup(typeof(Startup))]
 
-namespace GenerativeAi.Functions;
+namespace GenerativeAi.Functions.ingestion;
 
 public class Startup : FunctionsStartup
 {
@@ -62,16 +58,16 @@ public class Startup : FunctionsStartup
                                                                  .GetSection("azure_storage")
                                                                  .Get<AzureStorageSettings>();
                                           return new BlobServiceClient(settings.EndPoint, new DefaultAzureCredential());
-                                                                       //new StorageSharedKeyCredential(settings.Name, settings.Key),
-                                                                       //new BlobClientOptions
-                                                                       //{
-                                                                       //    Retry =
-                                                                       //    {
-                                                                       //        Mode = RetryMode.Exponential,
-                                                                       //        MaxRetries = 10,
-                                                                       //        Delay = TimeSpan.FromSeconds(5)
-                                                                       //    }
-                                                                       //});
+                                          //new StorageSharedKeyCredential(settings.Name, settings.Key),
+                                          //new BlobClientOptions
+                                          //{
+                                          //    Retry =
+                                          //    {
+                                          //        Mode = RetryMode.Exponential,
+                                          //        MaxRetries = 10,
+                                          //        Delay = TimeSpan.FromSeconds(5)
+                                          //    }
+                                          //});
                                       });
     }
 }

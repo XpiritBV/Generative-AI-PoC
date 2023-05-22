@@ -7,7 +7,7 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.DurableTask;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 
-namespace GenerativeAi.Functions;
+namespace GenerativeAi.Functions.ingestion;
 
 public record DocumentRequest(FileName Name, string Type);
 
@@ -19,13 +19,13 @@ public class IngestOrchestration
     {
         var data = await request.Content.ReadAsAsync<DocumentRequest>();
 
-        var instanceId = await orchestrationClient.StartNewAsync(nameof(AnalyzeDocumentOrchestrator), data);
+        var instanceId = await orchestrationClient.StartNewAsync(nameof(IngestionOrchestrator), data);
 
         return orchestrationClient.CreateCheckStatusResponse(request, instanceId);
     }
 
-    [FunctionName(nameof(AnalyzeDocumentOrchestrator))]
-    public static async Task AnalyzeDocumentOrchestrator([OrchestrationTrigger] IDurableOrchestrationContext context)
+    [FunctionName(nameof(IngestionOrchestrator))]
+    public static async Task IngestionOrchestrator([OrchestrationTrigger] IDurableOrchestrationContext context)
     {
         var request = context.GetInput<DocumentRequest>();
 

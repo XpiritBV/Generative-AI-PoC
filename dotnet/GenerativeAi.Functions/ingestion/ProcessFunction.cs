@@ -10,7 +10,7 @@ using Microsoft.Azure.WebJobs.Extensions.DurableTask;
 
 using StackExchange.Redis;
 
-namespace GenerativeAi.Functions;
+namespace GenerativeAi.Functions.ingestion;
 
 public class ProcessFunction
 {

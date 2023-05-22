@@ -1,4 +1,4 @@
-﻿namespace GenerativeAi.Functions;
+﻿namespace GenerativeAi.Functions.ingestion;
 
 public class ModelSelector
 {
