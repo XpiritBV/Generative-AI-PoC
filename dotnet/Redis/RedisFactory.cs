@@ -7,9 +7,9 @@ namespace Redis;
 public class RedisFactory
 {
     private readonly IDatabase _database;
-    private readonly RedisSettings _settings;
+    private readonly Settings _settings;
 
-    public RedisFactory(RedisSettings settings)
+    public RedisFactory(Settings settings)
     {
         _settings = settings;
         _database = Database();

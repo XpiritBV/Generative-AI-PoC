@@ -63,7 +63,7 @@ public class QuestionOrchestration
                                                                          }
                                                                      });
         var answer = chatResult.Value.Choices[0].Message.Content;
-        return JsonSerializer.Deserialize<QuestionResponse>("{" + answer + "}");
+        return JsonSerializer.Deserialize<QuestionResponse>(answer);
     }
 
     /*

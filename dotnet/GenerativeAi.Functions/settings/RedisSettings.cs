@@ -1,10 +1,12 @@
-﻿namespace GenerativeAi.Functions.settings;
+﻿using Redis;
+
+namespace GenerativeAi.Functions.settings;
 
 public class RedisSettings
 {
     public int Database { get; set; }
     public string ConnectionString { get; set; }
 
-    public Redis.RedisSettings AsSettings()
+    public Settings AsSettings()
         => new(ConnectionString, Database);
 }

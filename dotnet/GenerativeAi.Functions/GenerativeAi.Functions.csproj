@@ -17,6 +17,7 @@
         <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.Storage" Version="5.1.2" />
     </ItemGroup>
     <ItemGroup>
+        <ProjectReference Include="..\CognitiveSearch\CognitiveSearch.csproj" />
         <ProjectReference Include="..\Domain\Domain.csproj" />
         <ProjectReference Include="..\Redis\Redis.csproj" />
     </ItemGroup>

@@ -1,6 +1,6 @@
 ﻿namespace Domain;
 
-[StronglyTypedId(backingType: StronglyTypedIdBackingType.String, jsonConverter: StronglyTypedIdJsonConverter.SystemTextJson)]
+[StronglyTypedId(backingType: StronglyTypedIdBackingType.String)]
 public partial struct Version
 {
 }
