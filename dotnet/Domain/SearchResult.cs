@@ -1,4 +1,4 @@
-﻿namespace GenerativeAi.Functions;
+﻿namespace Domain;
 
 public record SearchResult(FileName Name,
                            Version Version,

@@ -3,6 +3,7 @@ using Azure.AI.FormRecognizer.DocumentAnalysis;
 using Azure.AI.OpenAI;
 using Azure.Storage.Blobs;
 
+using GenerativeAi.Functions;
 using GenerativeAi.Functions.ingestion;
 using GenerativeAi.Functions.settings;
 
@@ -10,11 +11,13 @@ using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-using StackExchange.Redis;
+using Redis;
+
+using RedisSettings=GenerativeAi.Functions.settings.RedisSettings;
 
 [assembly:FunctionsStartup(typeof(Startup))]
 
-namespace GenerativeAi.Functions.ingestion;
+namespace GenerativeAi.Functions;
 
 public class Startup : FunctionsStartup
 {
@@ -43,20 +46,15 @@ public class Startup : FunctionsStartup
         builder.Services.AddSingleton(provider =>
                                       {
                                           var settings = provider.GetService<IConfiguration>()
-                                                                 .GetSection("azure_cache")
-                                                                 .Get<RedisSettings>();
-                                          var redis = ConnectionMultiplexer.Connect(settings.ConnectionString);
-                                          return redis.GetDatabase(settings.Database);
-                                      });
-        builder.Services.AddSingleton(provider =>
-                                      {
-                                          var settings = provider.GetService<IConfiguration>()
                                                                  .GetSection("azure_storage")
                                                                  .Get<AzureStorageSettings>();
                                           return new BlobServiceClient(settings.ConnectionString);
                                       });
 
-        builder.Services.AddSingleton<Documents>();
+        builder.Services.AddSingleton(provider => new RedisFactory(provider.GetService<IConfiguration>()
+                                                                           .GetSection("azure_cache")
+                                                                           .Get<RedisSettings>()
+                                                                           .AsSettings()).Documents());
         builder.Services.AddSingleton<Embed, TextAda002Embedding>();
         builder.Services.AddSingleton(_ => new ModelSelector("prebuilt-document"));
     }

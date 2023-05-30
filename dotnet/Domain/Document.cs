@@ -1,3 +1,3 @@
-﻿namespace GenerativeAi.Functions.ingestion;
+﻿namespace Domain;
 
 public record Document(FileName Name, Version Version);

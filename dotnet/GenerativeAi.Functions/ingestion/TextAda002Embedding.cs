@@ -2,6 +2,8 @@
 
 using Azure.AI.OpenAI;
 
+using Domain;
+
 namespace GenerativeAi.Functions.ingestion;
 
 public class TextAda002Embedding : Embed

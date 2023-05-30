@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-using GenerativeAi.Functions.ingestion;
+﻿using Domain;
 
 using NRedisStack;
 using NRedisStack.RedisStackCommands;
@@ -13,15 +9,15 @@ using StackExchange.Redis;
 
 using Document=NRedisStack.Search.Document;
 
-namespace GenerativeAi.Functions;
+namespace Redis;
 
-public class Documents
+internal class RedisDocuments : Documents
 {
     private const string IndexName = "documentIndex";
     private const string IndexPrefix = "document";
     private readonly IDatabase _database;
 
-    public Documents(IDatabase database)
+    public RedisDocuments(IDatabase database)
     {
         _database = database;
     }
@@ -58,7 +54,7 @@ public class Documents
                                       new("embedding", embedding.AsBytes())
                                   });
 
-    public Task<IReadOnlyList<SearchResult>> Search(Embedding embedding)
+    public Task<IReadOnlyList<Domain.SearchResult>> Search(Embedding embedding)
     {
         ISearchCommands searchCommands = _database.FT();
         var searchResult = searchCommands.Search(IndexName,
@@ -74,11 +70,11 @@ public class Documents
         var results = searchResult.Documents
                                   .Select(AsSearchResult)
                                   .ToList();
-        return Task.FromResult<IReadOnlyList<SearchResult>>(results);
+        return Task.FromResult<IReadOnlyList<Domain.SearchResult>>(results);
 
-        static SearchResult AsSearchResult(Document document)
+        static Domain.SearchResult AsSearchResult(Document document)
             => new(new FileName(document["name"].ToString()),
-                   new Version(document["version"].ToString()),
+                   new Domain.Version(document["version"].ToString()),
                    new ChunkId(document["chunkId"].ToString()),
                    document["content"].ToString(),
                    float.Parse(document["score"].ToString()));

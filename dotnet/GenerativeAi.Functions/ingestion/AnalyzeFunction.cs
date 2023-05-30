@@ -8,6 +8,8 @@ using Azure;
 using Azure.AI.FormRecognizer.DocumentAnalysis;
 using Azure.Storage.Blobs;
 
+using Domain;
+
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.DurableTask;
 
@@ -41,7 +43,9 @@ public class AnalyzeFunction
         await stream.DisposeAsync();
 
         //a clean way to change chunk strategy is needed
-        return result.Value.Pages.Select(page => new Chunk(new ChunkId(page.PageNumber.ToString()), document, string.Join(" ", page.Lines.Select(l => l.Content))));
+        return result.Value.Pages.Select(page => new Chunk(new ChunkId(page.PageNumber.ToString()),
+                                                           document,
+                                                           string.Join(" ", page.Lines.Select(l => l.Content))));
     }
 
     private static async Task<Version> GetFileVersion(Stream stream)

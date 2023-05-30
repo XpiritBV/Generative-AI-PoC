@@ -1,7 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using Azure.AI.OpenAI;
+
+using Domain;
 
 namespace GenerativeAi.Functions.question;
 

@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 
 using Azure.AI.OpenAI;
 
+using Domain;
+
 using GenerativeAi.Functions.ingestion;
 
 using Microsoft.Azure.WebJobs;
@@ -27,13 +29,6 @@ public class QuestionOrchestration
         _documents = documents;
         _openAiClient = openAiClient;
     }
-
-    [FunctionName(nameof(CreateIndex))]
-    public Task CreateIndex([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequestMessage request)
-    {
-        return _documents.CreateIndex();
-    }
-
 
     [FunctionName(nameof(Question))]
     public static async Task<HttpResponseMessage> Question([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)] HttpRequestMessage request,
@@ -88,6 +83,5 @@ public class QuestionOrchestration
                                    string RelevantSubstring,
                                    IEnumerable<QuestionResponseSource> Sources);
 
-    public record QuestionResponseSource(ChunkId ChunkId,
-                                         int ImportanceRating);
+    public record QuestionResponseSource(ChunkId ChunkId, int ImportanceRating);
 }

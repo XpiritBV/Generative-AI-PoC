@@ -1,4 +1,4 @@
-﻿namespace GenerativeAi.Functions.ingestion;
+﻿namespace Domain;
 
 public record Chunk(ChunkId Id,
                     Document Document,
