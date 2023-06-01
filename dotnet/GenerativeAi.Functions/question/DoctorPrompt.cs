@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 using Azure.AI.OpenAI;
@@ -30,10 +29,18 @@ public class DoctorPrompt
                                 ""importanceRating"": 0.5 //a number between 0 and 1 indicating how important the snippet is to the answer.
                             }
                         ],
-                        ""relevantSubstring"": ""A direct quote from the snippet that was most relevant in creating your answer. Use ellipses ... for substrings longer than 10 words.""
+                        ""relevantSubstring"": ""A direct quote from the snippet that was most relevant in creating your answer. 
+                                                 Use ellipses ... for substrings longer than 10 words.""
                     }""");
 
-    public ChatMessage Question(string question,
-                                IEnumerable<SearchResult> searchResults)
-        => new(ChatRole.User, $"sources: ```{string.Join(" ", searchResults.Select(r => $"sourceId: {r.ChunkId.Value} content: {r.Content}"))}``` question: ```{question}?```");
+    public static ChatMessage Question(string question,
+                                       IEnumerable<SearchResult> searchResults)
+    {
+        var sources = string.Join(" ",
+                                  searchResults.Select(r => $"sourceId: {r.ChunkId.Value} " +
+                                                            $"content: {r.Content}"));
+        return new ChatMessage(ChatRole.User,
+                               $"sources: ```{sources}``` " +
+                               $"question: ```{question}?```");
+    }
 }

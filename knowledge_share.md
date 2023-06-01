@@ -7,11 +7,7 @@ Explain the example of how a company wants to use a LLM to answer questions abou
        Training a LLM is very expensive and time consuming, if your data changes often, this is not a viable option.
     2. Include all the source data you want to ask a question about into the prompt.
        the size of the context of an LLM is, currently, quite limited. 5k for GPT-3 and 1k for GPT-2. There are models that expand that to 34k, but that is still not a lot, and those are not available to the public.
-    3. Embedding, this is a hack on 2 using mathematical magic.
-
-# Embedding
-
-Why send a whole document when you only need a single paragraph to answer a question.
+    3. RAG, this is a hack on 2 using mathematical magic.
 
 # Vectors
 
